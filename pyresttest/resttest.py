@@ -820,7 +820,10 @@ def main(args):
         register_extensions(extensions)
 
     test_file = args['test']
+    test_target = args['target']
     test_structure = read_test_file(test_file)
+    if test_target:
+        test_structure = test_structure.get(test_target)
 
     my_vars = None
     if 'vars' in args and args['vars'] is not None:
@@ -879,6 +882,8 @@ def parse_command_line_args(args_in):
         u"--url", help="Base URL to run tests against", action="store", type="string")
     parser.add_option(u"--test", help="Test file to use",
                       action="store", type="string")
+    parser.add_option(u"--target", help="Test target to use, default is the file itself, if target=smoke the test_file_dict.smoke is unsed",
+                      action="store", type="string",default='', )
     parser.add_option(u'--import_extensions',
                       help='Extensions to import, separated by semicolons', action="store", type="string")
     parser.add_option(

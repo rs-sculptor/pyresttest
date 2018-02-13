@@ -107,6 +107,7 @@ class Test(object):
     auth_type = pycurl.HTTPAUTH_BASIC
     delay = 0
     curl_options = None
+    test_runs = 1
 
     templates = None  # Dictionary of template to compiled template
 
@@ -428,6 +429,7 @@ class Test(object):
             u'expected_status': [coerce_list_of_ints],
             u'delay': [lambda x: int(x)],
             u'stop_on_failure': [safe_to_bool],
+            u'test_runs': [lambda x: int(x)],  # Repeat times
 
             # Templated / special handling
             #u'url': [coerce_templatable, set_templated),  # TODO: special handling for templated content, sigh

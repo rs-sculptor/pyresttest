@@ -653,7 +653,8 @@ def run_testsets(testsets):
         myinteractive = True if myinteractive or myconfig.interactive else False
 
         # Run tests, collecting statistics as needed
-        for test in mytests:
+        import itertools
+        for test in itertools.chain.from_iterable(map(lambda t: itertools.repeat(t,t.test_runs), mytests)):
             # Initialize the dictionaries to store test fail counts and results
             if test.group not in group_results:
                 group_results[test.group] = list()

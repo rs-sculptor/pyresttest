@@ -222,6 +222,12 @@ def register_generator(typename, parse_function):
 # Try registering a new generator
 register_generator('choice', parse_choice_generator)
 
+from pyresttest.rs_ext import rs_token_generator
+register_generator('token', rs_token_generator.token)
+from pyresttest.rs_ext import rs_product_generator
+register_generator('product', rs_product_generator.product)
+from pyresttest.rs_ext import rs_iterexpr_generator
+register_generator('iterexpr', rs_iterexpr_generator.iterexpr)
 
 def parse_generator(configuration):
     """ Parses a configuration built from yaml and returns a generator

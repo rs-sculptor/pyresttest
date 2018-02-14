@@ -46,6 +46,18 @@ class Context(object):
         str_name = str(variable_name)
         val = next(self.generators[str_gen_name])
 
+        # enhance: support comma seperated list of variable name.
+        # if str_name is csv like: a,b,c, and value is a list like: [1,2,3] , then a = 1, b = 2, c = 3
+        #
+        _listize = lambda x: x if isinstance(x, (list, tuple, map)) else [x]
+        str_name_list = map(str.strip, str_name.split(','))
+        for n, v in zip(str_name_list, _listize(val)):
+            prev = self.variables.get(n)
+            if prev != v:
+                self.variables[n] = v
+                self.mod_count = self.mod_count + 1
+        return val
+        """
         prev = self.variables.get(str_name)
         if prev != val:
             self.variables[str_name] = val
@@ -53,6 +65,7 @@ class Context(object):
             # Logging is /expensive/
             #logging.debug('Context: Set variable named {0} to next value {1} from generator named {2}'.format(variable_name, val, generator_name))
         return val
+        """
 
     def get_values(self):
         return self.variables

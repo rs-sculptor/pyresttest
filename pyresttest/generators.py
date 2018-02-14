@@ -46,15 +46,18 @@ CHARACTER_SETS = {
 }
 
 
-def factory_generate_ids(starting_id=1, increment=1):
+def factory_generate_ids(starting_id=1, increment=1, width=0, stop=None):
     """ Return function generator for ids starting at starting_id
         Note: needs to be called with () to make generator """
+    width = 0 if width is None else width
     def generate_started_ids():
         val = starting_id
         local_increment = increment
         while(True):
-            yield val
+            yield ('{n:0>%s}' % width).format(n=val)
             val += local_increment
+            if stop is not None and val >= stop:
+                val = starting_id
     return generate_started_ids
 
 
@@ -240,15 +243,11 @@ def parse_generator(configuration):
     elif gen_type == u'number_sequence':
         start = configuration.get('start')
         increment = configuration.get('increment')
-        if not start:
-            start = 1
-        else:
-            start = int(start)
-        if not increment:
-            increment = 1
-        else:
-            increment = int(increment)
-        return factory_generate_ids(start, increment)()
+        width = configuration.get('width')  # width of number by '{n:0>width}'.format(n=n)
+        stop = configuration.get('stop')  # reset to start if reaching stop
+        start = 1 if start is None else int(start)
+        increment = 1 if increment is None else int(increment)
+        return factory_generate_ids(start, increment,width, stop)()
     elif gen_type == u'random_int':
         return generator_random_int32()
     elif gen_type == u'random_text':
